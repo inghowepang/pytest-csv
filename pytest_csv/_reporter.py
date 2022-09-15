@@ -79,10 +79,13 @@ class CSVReporter(object):
                                               for header in six.iterkeys(row[column_id]))))
                    for column_id in six.iterkeys(self._columns)}
 
-        #find id column
-        scan_id_key = 'id'
+        if self._xdist_sort is True:
+            #find id column
+            scan_id_key = 'id'
 
-        id_index = list(headers.keys()).index(scan_id_key)  if f"'{scan_id_key}'" in str(headers.keys()) else -1
+            id_index = list(headers.keys()).index(scan_id_key)  if f"'{scan_id_key}'" in str(headers.keys()) else -1
+        else:
+            id_index = -1
 
         with open(self._csv_path, 'w', newline='', encoding="utf-8") as out:
             writer = csv.writer(out, delimiter=self._delimiter, quotechar=self._quote_char, quoting=csv.QUOTE_MINIMAL)
@@ -91,7 +94,7 @@ class CSVReporter(object):
                              for column_id in six.iterkeys(self._columns)
                              for header in headers[column_id]])
 
-            if id_index == -1 or self._xdist_sort is not True:
+            if id_index == -1:
                 # if id column not founded
                 for row in self._rows:
                     writer.writerow([row[column_id].get(header, '')
