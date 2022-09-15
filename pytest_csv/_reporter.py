@@ -79,6 +79,7 @@ class CSVReporter(object):
                                               for header in six.iterkeys(row[column_id]))))
                    for column_id in six.iterkeys(self._columns)}
 
+        # --xdist_sort option
         if self._xdist_sort is True:
             #find id column
             scan_id_key = 'id'
